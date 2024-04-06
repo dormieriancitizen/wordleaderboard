@@ -88,7 +88,7 @@ async def update_leaderboard(guild,word):
 
     reply = f"## Word Leaderboard {word} \n"
     for key in sorted(word_counts["counts"], key=word_counts["counts"].get, reverse=True):
-        reply += f"- `{key}` sent word `{word_counts['counts'][key]}` times \n"
+        reply += f"- `{(await bot.fetch_user(key))}` sent word `{word_counts['counts'][key]}` times \n"
 
     await message.edit(content=reply)
 
