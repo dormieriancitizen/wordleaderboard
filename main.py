@@ -27,11 +27,18 @@ async def _create_leaderboard(ctx,arg):
     if os.path.isfile(f"guilds/{ctx.guild.id}.json"):
         with open(f"guilds/{ctx.guild.id}.json","r+") as file:
             leaderboard = json.loads(file.read())
-            leaderboard[arg] = {
-                    "leaderboard_id":board.id,
-                    "leaderboard_channel":board.channel.id,
-                    "counts":{}
-                }
+            if arg in leaderboard:
+                leaderboard[arg] = {
+                        "leaderboard_id":board.id,
+                        "leaderboard_channel":board.channel.id,
+                        "counts":leaderboard[arg]["counts"]
+                    }
+            else:
+                leaderboard[arg] = {
+                        "leaderboard_id":board.id,
+                        "leaderboard_channel":board.channel.id,
+                        "counts":{}
+                    }
             file.seek(0)
             file.write(json.dumps(leaderboard))
             file.truncate()
@@ -79,7 +86,7 @@ async def _update_message_counts(ctx):
     with open(f"guilds/{ctx.guild.id}.json","w") as file:
         file.write(json.dumps(guilds_counts[ctx.guild.id]))
     
-    if guilds_counts[ctx.guild.id][string]["counts"][str(ctx.author.id)] % 5 == 0:
+    if guilds_counts[ctx.guild.id][string]["counts"][str(ctx.author.id)] % 1 == 0:
         await update_leaderboard(ctx.guild.id,string)
 
 async def update_leaderboard(guild,word):
